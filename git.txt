@@ -1,0 +1,22 @@
+
+apt-get update
+apt-get install git-core
+git config --global user.name "testuser"
+git config --global user.email  "testuser@example.com"
+
+echo ".idea/*" >> .gitignore 
+git rm --cached .idea/misc.xml
+
+git config core.fileMode false
+
+git log --stat 
+
+ git reset nbproject/ 
+ git branch
+ git reset 765afe4c gvjgvhj
+
+git clean -f  (after reset )
+git reset nbproject/ 
+
+push --force origin med
+git checkout -b feature/med_2

@@ -1,0 +1,112 @@
+
+
+=============================>>>>>>>>>>>>>>>>>
+
+
+*********** ctrl ***********
+
+     public function ajaxGetCommettantAction(Request $request, \Cybercom\CrmBundle\Entity\Article $article) {
+        $response = new Response();
+        if ($article) {
+            $response->setContent(json_encode(array('status' => 'ok', 'commettant' => $article->getCommettant()->getNomcommettant())));
+        } else {
+            $response->setContent(json_encode(array('status' => 'not_ok', 'commettant' => 0)));
+        }
+        return $response;
+    }
+
+
+*********************************
+
+    public function ajaxGetArticleAction(Request $request) {
+        $id=$request->query->get('id', null);
+        $id1=$request->query->get('id1', null);
+        $response = new Response();
+        var_dump($id,$id1);die();
+        $request->query->get('id');
+        return $response;
+    }
+
+
+
+<<<<<<<<<<<<<<<=============================================
+
+
+==================================>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+***** routing ***********************************
+
+cybercom_crm_ajax_get_article:
+    path:     /ajax-article
+    defaults: { _controller: CybercomCrmBundle:Commande:ajaxGetArticle }
+cybercom_crm_commande_pdf:
+    path:     /pdfcommande/{id}
+    defaults: { _controller: CybercomCrmBundle:Commande:pdfcommande }    
+
+<<<<<<<<<<<<================================================
+
+
+
+
+
+========================================>>>>>>>>>>>>>>>>>>>>>
+
+
+
+****************  phtml *****************************
+
+
+                   $('.commettant-select').change(function () {
+
+                                        var valueCom ='';
+                                        var valueFam ='';
+
+                                                 valueCom = $('.commettant-select').val();
+                                                 valueFam = $('.famille-select').val();
+                                                // alert(valueFam);
+                                                var $this = $(this);
+                                                var url = '{{path('cybercom_crm_ajax_get_article')}}?id='+valueFam+'&id1='+valueCom;
+
+                                                $.ajax({
+                                                    url: url,
+                                                    type: 'get',
+                                                    dataType: 'json',
+                                                    success: function (data, textStatus, jqXHR) {
+                                                        alert("aa");
+//                                                        if (data.status === 'ok') {
+//                                                            $this.parent().parent().parent().find('.article-price').first().html(data.price + ' &euro;')
+//                                                        } else {
+//                                                            alert("id d'article n'est pas valide!!!");
+//                                                        }
+                                                    }
+                                                });
+
+                                         });
+
+
+*************************************************************************************************************************
+
+
+                        $('.article-select').change(function () {
+                                                var value = $(this).val();
+                                                var $this = $(this);
+                                                var url = '{{path('cybercom_crm_ajax_get_price', {id:'_id_'})}}';
+                                                url = url.replace('_id_', value);
+                                                $.ajax({
+                                                    url: url,
+                                                    type: 'get',
+                                                    dataType: 'json',
+                                                    success: function (data, textStatus, jqXHR) {
+                                                        if (data.status === 'ok') {
+                                                            $this.parent().parent().parent().find('.article-price').first().html(data.price + ' &euro;')
+                                                        } else {
+                                                            alert("id d'article n'est pas valide!!!");
+                                                        }
+                                                    }
+                                                });
+  
+ 
+                                            });
+
+ *********************************************
+                                 

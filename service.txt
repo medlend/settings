@@ -1,0 +1,102 @@
+services:
+    orlando_admin_bundle.adress_type.form.type:
+        class: Orlando\AdminBundle\Form\AdressType
+        arguments:
+            entityManager: "@doctrine.orm.entity_manager"
+        tags:
+            - { name: form.type }
+
+=============================================================
+
+    med.serv:
+        class: AppBundle\Services\MedService
+    med_listener1:
+        class: AppBundle\EventListener\TestLendSubcriber
+        arguments: ["@med.serv"]
+        tags:
+            - { name: kernel.event_subscriber}
+    med_listener2:
+        class: AppBundle\EventListener\TestLendListener
+        arguments: ["@med.serv"]
+        tags:
+            - { name: kernel.event_listener, event: med.lend, method: lendol}
+
+==========================================================================
+
+    auth_token_user_provider:
+        class: AppBundle\Security\AuthTokenUserProvider
+        arguments: ["@auth_token_repository", "@user_repository"]
+        public:    false
+
+    auth_token_repository:
+        class:   Doctrine\ORM\EntityManager
+        factory: ["@doctrine.orm.entity_manager", "getRepository"]
+        arguments: ["AppBundle:AuthToken"]
+
+================================================================================
+
+Event.php : 
+				************
+										class Events {
+								    const SANTEVET_SSO_LOGIN = 'santevet.sso.login';
+								}
+				*******************
+Logevent.php : 
+				***********************
+								attr + set +get
+								    public function hydrateByForm(Form $form)
+								    {
+								        //array key "fild name", value "setter function"
+								        $aFilds = [
+								            'username' => 'setUsername',
+								            'password' => 'setPassword',
+								        ];
+								        foreach ($aFilds as $fildName => $functionName) {
+								            if ($form->has($fildName)) {
+								                if ($form->get($fildName)->getData() !== null) {
+								                    $this->{$functionName}($form->get($fildName)->getData());
+								                }
+								            }
+								        }
+								    }
+					*******************************
+
+service : 
+					****************************************
+							   santevet_api_sso.listener.sv_login:
+							        class: Santevet\SsoBundle\EventListeners\SvLoginEventListener
+							        arguments:
+							            - @doctrine.orm.sv2_entity_manager
+							            - @sv_beanstalkd
+							            - %token_validity_duration%
+							        tags:
+							            - { name: kernel.event_listener, event: santevet.sso.login, method: oLoginValidation }
+
+					************************************************
+
+ctrl : 
+							*****************
+							$oEvent = new LoginEvent();
+							 $aSubmittedData = $request->request->all();
+							       //create the form and pass the HttpMethod to manage fields requirements
+					        $oForm = $this->createForm(new SvLoginType(), $oEvent);
+
+					        //bind submittedData into the form
+					        $oForm->submit($aSubmittedData);
+					        $oEvent->hydrateByForm($oForm);
+
+
+					        //validate data
+					        if ($oForm->isValid()) {
+					            //dispatch the Event
+					            $this->get('event_dispatcher')->dispatch(Events::SANTEVET_SSO_LOGIN, $oEvent);
+
+
+
+
+
+
+
+
+
+

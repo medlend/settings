@@ -1,0 +1,74 @@
+composer.phar create-project symfony/framework-standard-edition festival "2.8.*"
+composer create-project symfony/framework-standard-edition service-medlend
+
+cd my_project_name
+
+php bin/console server:start 192.168.0.1:8080 --docroot=public_html 
+
+ php bin/console server:start --env=test --router=app/config/router_test.php
+
+composer update $php bin/console security:check
+
+composer require doctrine/doctrine-fixtures-bundle
+
+ln -s my_project_name/web /path/to/public_html
+
+php app/console cache:clear --env=prod
+
+bundle:
+ php bin/console generate:bundle --namespace=User/UserBundle --bundle-name=UserBundle --format=yml
+
+doctine:
+ php bin/console doctrine:database:create
+ php bin/console doctrine:schema:update --force
+ php app/console generate:doctrine:crud --entity=AcmeBlogBundle:Post
+ php bin/console doctrine:schema:update --dump-sql --force
+
+ app/console doctrine:fixtures:load -e test
+
+router :
+ php bin/console debug:router
+ php bin/console debug:config fos_rest
+php bin/console debug:router
+ 
+cache clear:
+ php bin/console cache:clear -e prod
+  rm -R app/cache/* & chmod -R 777 ./
+
+generate entity:
+ php bin/console generate:doctrine:entity --entity=TestBundle:Product --fields="title:string(length=100 nullable=true unique=false)  prix:decimal(precision=10 scale=0)" --format=annotation
+ php app/console generate:doctrine:crud --entity=AcmeBlogBundle:Post
+
+generate getter and setter:
+ php app/console doctrine:generate:entities Core/StoreBundle/Entity/Product
+
+
+=========================================================================================================
+
+ln -s /home/medlend/Bureau/mean/festival /var/www/html/
+
+/etc/apache2/sites-available/
+
+
+====================>>>>>>>>
+
+<VirtualHost *:80>
+
+	ServerName api.santevet-sso.loc
+	ServerAlias rest.santevet-sso.loc
+
+	ServerAdmin webmaster@localhost
+	DocumentRoot /var/www/html/api-sso/web
+
+	ErrorLog ${APACHE_LOG_DIR}/error.log
+	CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+</VirtualHost>
+
+
+<<<<<<<<====================
+a2ensite festival.tn.conf
+127.0.1.1       api.santevet-sso.loc
+
+
+

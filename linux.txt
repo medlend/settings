@@ -1,0 +1,4 @@
+ 
+mv phpDocumentor.phar /usr/local/bin/phpDocumentor.phar
+
+phpDocumentor.phar -d src/ -t ../docs/api_sso/ --template="responsive-twig"
